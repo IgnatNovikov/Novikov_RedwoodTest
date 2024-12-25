@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class CharacterController : MonoBehaviour
+public class CharacterController : MonoBehaviour, ICharacterPosition
 {
     [SerializeField] private UnityEngine.CharacterController _controller;
     [SerializeField] private CharacterAnimator _animator;
 
     [Header("Character parameters")]
-    [SerializeField] private float _movementSpeed;
+    [SerializeField, Min(0)] private float _movementSpeed;
 
     private InputActions _inputActions;
     private InputAction _move;
@@ -53,5 +53,10 @@ public class CharacterController : MonoBehaviour
     {
         Debug.Log("Shot");
         _animator.Shot();
+    }
+
+    public Vector3 GetPosition()
+    {
+        return transform.position;
     }
 }

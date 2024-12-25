@@ -5,21 +5,27 @@ using UnityEngine;
 public class ZombieController : MonoBehaviour
 {
     [SerializeField] private UnityEngine.CharacterController _controller;
-    //[SerializeField] private ZombieAnimator _animator;
+    [SerializeField] private ZombieAnimator _animator;
 
-    [Header("Character parameters")]
-    [SerializeField] private float _movementSpeed;
+    private Vector3 _moveDirection;
+    private ZombieData _data;
 
-    private Vector2 _moveDirection;
-
-    public void Init(Vector2 direction)
+    public void Init(ZombieData data, Vector3 position, Vector3 characterPosition)
     {
-        _moveDirection = direction;
-        //_animator.Run(_moveDirection);
+        _data = data;
+
+        _controller.enabled = false;
+        transform.position = position;
+        _controller.enabled = true;
+        _moveDirection = (characterPosition - transform.position).normalized;
+        _animator.Run(_data.AnimatorController, _moveDirection);
     }
 
     private void FixedUpdate()
     {
-        _controller.Move(_moveDirection * _movementSpeed);
+        if (_data == null)
+            return;
+
+        _controller.Move(_moveDirection * _data.MoveSpeed);
     }
 }

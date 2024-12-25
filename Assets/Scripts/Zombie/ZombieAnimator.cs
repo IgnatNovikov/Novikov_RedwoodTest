@@ -6,10 +6,11 @@ public class ZombieAnimator : MonoBehaviour
 {
     [SerializeField] private Animator _animator;
     [SerializeField] private Transform _zombieTransform;
-    [SerializeField] private string _runTriggerName;
 
-    public void Run(Vector2 direction)
+    public void Run(RuntimeAnimatorController controller, Vector2 direction)
     {
+        _animator.runtimeAnimatorController = controller;
+
         Vector3 scale = _zombieTransform.localScale;
         if (direction.x < 0)
         {
@@ -20,7 +21,5 @@ public class ZombieAnimator : MonoBehaviour
             scale.x = 1;
         }
         _zombieTransform.localScale = scale;
-
-        _animator.SetTrigger(_runTriggerName);
     }
 }
