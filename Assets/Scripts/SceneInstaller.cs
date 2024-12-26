@@ -15,6 +15,9 @@ public class SceneInstaller : MonoInstaller
     [SerializeField] private Transform _bulletPoolTransform;
     [SerializeField] private BulletController _bulletPrefab;
 
+    [Header("UI")]
+    [SerializeField] private BulletsCounter _bulletsCounter;
+
     public override void InstallBindings()
     {
         Container.BindFactory<ZombieController, ZombieFactory>().FromComponentInNewPrefab(_zombiePrefab);
@@ -23,5 +26,7 @@ public class SceneInstaller : MonoInstaller
         Container.Bind<IZombiePool>().To<ZombieSpawner>().FromInstance(_zombieSpawner);
 
         Container.BindFactory<BulletController, BulletFactory>().FromComponentInNewPrefab(_bulletPrefab).UnderTransform(_bulletPoolTransform);
+
+        Container.Bind<BulletsCounter>().FromInstance(_bulletsCounter);
     }
 }

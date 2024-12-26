@@ -2,12 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+using Zenject;
 
 public class CharacterController : MonoBehaviour, ICharacterPosition
 {
     [SerializeField] private UnityEngine.CharacterController _controller;
     [SerializeField] private CharacterAnimator _animator;
     [SerializeField] private Transform _cameraPositionTransform;
+    [SerializeField] private int _bulletsAmount;
 
     [Header("Character parameters")]
     [SerializeField, Min(0)] private float _movementSpeed;
@@ -21,9 +23,12 @@ public class CharacterController : MonoBehaviour, ICharacterPosition
 
     private Vector2 _moveDirection;
 
+    [Inject] private BulletsCounter _bulletsCounter;
+
     private void Awake()
     {
         _inputActions = new InputActions();
+        _bulletsCounter.SetBulletsCount(_bulletsAmount);
     }
 
     private void OnEnable()
@@ -55,6 +60,12 @@ public class CharacterController : MonoBehaviour, ICharacterPosition
 
     private void OnShoot(InputAction.CallbackContext callback)
     {
+        if (_bulletsAmount < 1)
+            return;
+
+        _bulletsAmount--;
+        _bulletsCounter.SetBulletsCount(_bulletsAmount);
+
         Debug.Log("Shot");
         _firePoint.SpawnBullet();
         _animator.Shot();
