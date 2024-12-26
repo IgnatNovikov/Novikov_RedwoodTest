@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
-public class ZombieSpawner : MonoBehaviour
+public class ZombieSpawner : MonoBehaviour, IZombiePool
 {
     [SerializeField] private ZombieConfig _zombieConfig;
     [SerializeField] private int _minDelay;
@@ -30,12 +30,13 @@ public class ZombieSpawner : MonoBehaviour
         Vector3 pos = _spawnerTransforms.GetSpawner().position;
         pos.y = transform.position.y;
 
-        zombie.Init(_zombieConfig.GetZombieData(), pos, _characterPosition.GetPosition());
+        Vector3 zombiePos = _characterPosition.GetPosition();
+        zombiePos.y = transform.position.y;
+        zombie.Init(_zombieConfig.GetZombieData(), pos, zombiePos);
         zombie.transform.SetParent(transform);
 
         _sequence = null;
         _sequence = DOTween.Sequence();
-        //int delay = Random.Range(_minDelay, _maxDelay);
         _sequence.SetDelay(Random.Range(_minDelay, _maxDelay));
         _sequence.AppendCallback(SpawnZombie);
         _sequence.Play();

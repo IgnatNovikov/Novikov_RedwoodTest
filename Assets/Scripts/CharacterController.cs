@@ -7,6 +7,7 @@ public class CharacterController : MonoBehaviour, ICharacterPosition
 {
     [SerializeField] private UnityEngine.CharacterController _controller;
     [SerializeField] private CharacterAnimator _animator;
+    [SerializeField] private Transform _cameraPositionTransform;
 
     [Header("Character parameters")]
     [SerializeField, Min(0)] private float _movementSpeed;
@@ -58,5 +59,15 @@ public class CharacterController : MonoBehaviour, ICharacterPosition
     public Vector3 GetPosition()
     {
         return transform.position;
+    }
+
+    public Vector3 GetCameraPosition()
+    {
+        if (_moveDirection == Vector2.zero)
+        {
+            return transform.position;
+        }
+
+        return _cameraPositionTransform.position;
     }
 }
