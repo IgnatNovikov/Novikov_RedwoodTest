@@ -1,21 +1,18 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using Zenject;
 
 public class BulletController : MonoBehaviour
 {
     [SerializeField] private Rigidbody2D _rigidBody;
     [SerializeField] private float _speed;
 
-    private void Start()
-    {
-        Shoot();
-    }
 
-    public void Shoot()
+    //[Inject] private IBulletPool _bulletPool;
+    public void Shoot(Vector3 direction)
     {
-        _rigidBody.AddForce(Vector2.right * _speed);
-        Debug.Log(_rigidBody.velocity);
+        _rigidBody.AddForce(direction * _speed);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -26,5 +23,6 @@ public class BulletController : MonoBehaviour
 
         zombie.TakeHit();
         gameObject.SetActive(false);
+        //_bulletPool.FreeBullet(this);
     }
 }

@@ -12,6 +12,9 @@ public class CharacterController : MonoBehaviour, ICharacterPosition
     [Header("Character parameters")]
     [SerializeField, Min(0)] private float _movementSpeed;
 
+    [Header("Bullets")]
+    [SerializeField] private BulletSpawner _firePoint;
+
     private InputActions _inputActions;
     private InputAction _move;
     private InputAction _shoot;
@@ -53,6 +56,7 @@ public class CharacterController : MonoBehaviour, ICharacterPosition
     private void OnShoot(InputAction.CallbackContext callback)
     {
         Debug.Log("Shot");
+        _firePoint.SpawnBullet();
         _animator.Shot();
     }
 

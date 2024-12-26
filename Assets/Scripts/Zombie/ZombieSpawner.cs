@@ -48,6 +48,7 @@ public class ZombieSpawner : MonoBehaviour, IZombiePool
         if (_freeZombies.Count > 0)
         {
             zombie = _freeZombies.Pop();
+            zombie.gameObject.SetActive(true);
         }
         else
         {
