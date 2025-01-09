@@ -16,6 +16,7 @@ public class CharacterController : MonoBehaviour, ICharacterPosition
 
     [Header("Bullets")]
     [SerializeField] private BulletSpawner _firePoint;
+    [SerializeField] private Timer _shotTimer;
 
     private InputActions _inputActions;
     private InputAction _move;
@@ -23,12 +24,16 @@ public class CharacterController : MonoBehaviour, ICharacterPosition
 
     private Vector2 _moveDirection;
 
+    private bool _shooting = false;
+
     [Inject] private BulletsCounter _bulletsCounter;
 
     private void Awake()
     {
         _inputActions = new InputActions();
         _bulletsCounter.SetBulletsCount(_bulletsAmount);
+
+        _shotTimer.OnTimeAction += Shoot;
     }
 
     private void OnEnable()
@@ -38,7 +43,9 @@ public class CharacterController : MonoBehaviour, ICharacterPosition
 
         _shoot = _inputActions.PlayerActions.Shot;
         _shoot.Enable();
-        _shoot.performed += OnShoot;
+        _shoot.started += OnBurstStarted;
+        //_shoot.performed += OnShoot;
+        _shoot.canceled += OnBurstCanceled;
     }
 
     private void OnDisable()
@@ -58,8 +65,20 @@ public class CharacterController : MonoBehaviour, ICharacterPosition
         _controller.Move(_moveDirection * _movementSpeed);
     }
 
-    private void OnShoot(InputAction.CallbackContext callback)
+    private void OnBurstStarted(InputAction.CallbackContext callback)
     {
+        _shooting = true;
+
+        Shoot();
+        _shotTimer.StartTimer();
+    }
+
+    //private void OnShoot(InputAction.CallbackContext callback)
+    private void Shoot()
+    {
+        if (!_shooting)
+            return;
+
         if (_bulletsAmount < 1)
             return;
 
@@ -69,6 +88,12 @@ public class CharacterController : MonoBehaviour, ICharacterPosition
         Debug.Log("Shot");
         _firePoint.SpawnBullet();
         _animator.Shot();
+    }
+
+    private void OnBurstCanceled(InputAction.CallbackContext callback)
+    {
+        _shooting = false;
+        _shotTimer.StopTimer();
     }
 
     public Vector3 GetPosition()
