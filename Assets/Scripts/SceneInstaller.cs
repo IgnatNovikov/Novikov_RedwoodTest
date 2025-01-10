@@ -14,6 +14,10 @@ public class SceneInstaller : MonoInstaller
     [Header("Bullet Settings")]
     [SerializeField] private Transform _bulletPoolTransform;
     [SerializeField] private BulletController _bulletPrefab;
+    [SerializeField] private BulletSpawner _bulletSpawner;
+
+    [Header("Loot Settings")]
+    [SerializeField] private GameObject _lootItem;
 
     [Header("UI")]
     [SerializeField] private BulletsCounter _bulletsCounter;
@@ -28,5 +32,8 @@ public class SceneInstaller : MonoInstaller
         Container.BindFactory<BulletController, BulletFactory>().FromComponentInNewPrefab(_bulletPrefab).UnderTransform(_bulletPoolTransform);
 
         Container.Bind<BulletsCounter>().FromInstance(_bulletsCounter);
+        Container.Bind<IBulletPool>().To<BulletSpawner>().FromInstance(_bulletSpawner);
+
+        Container.BindFactory<LootItem, LootFactory>().FromComponentInNewPrefab(_lootItem);
     }
 }

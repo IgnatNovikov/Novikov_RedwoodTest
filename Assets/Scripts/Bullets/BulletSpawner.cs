@@ -1,9 +1,8 @@
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
-public class BulletSpawner : MonoBehaviour//, IBulletPool
+public class BulletSpawner : MonoBehaviour, IBulletPool
 {
     private Stack<BulletController> _freeBullets = new Stack<BulletController>();
     private List<BulletController> _usedBullets = new List<BulletController>();
@@ -14,6 +13,7 @@ public class BulletSpawner : MonoBehaviour//, IBulletPool
     public void SpawnBullet()
     {
         BulletController bullet = GetBullet();
+
         bullet.transform.position = transform.position;
         bullet.Shoot((transform.position - _characterPosition.GetPosition()).normalized);
     }
@@ -38,6 +38,9 @@ public class BulletSpawner : MonoBehaviour//, IBulletPool
 
     public void FreeBullet(BulletController bullet)
     {
+        if (_freeBullets.Contains(bullet))
+            return;
+
         _usedBullets.Remove(bullet);
         _freeBullets.Push(bullet);
     }

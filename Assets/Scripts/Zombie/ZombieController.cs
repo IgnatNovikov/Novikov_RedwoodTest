@@ -1,22 +1,24 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using Zenject;
 
 public class ZombieController : MonoBehaviour
 {
-    [SerializeField] private UnityEngine.CharacterController _controller;
+    [SerializeField] private Rigidbody2D _rigidBody;
     [SerializeField] private ZombieAnimator _animator;
 
     [Header("HP settings")]
     [SerializeField] private MeshRenderer _hpBar;
     [SerializeField] private string _healthShaderParameterName = "_Health";
 
+    [Header("Loot Settings")]
+    [SerializeField] private Transform _lootSpawnPoint;
+
     private Vector3 _moveDirection;
     private ZombieData _data;
     private int _currentHealth;
 
     [Inject] private IZombiePool _zombiePool;
+    [Inject] private LootFactory _lootFactory;
 
     public void Init(ZombieData data, Vector3 position, Vector3 characterPosition)
     {
@@ -25,19 +27,10 @@ public class ZombieController : MonoBehaviour
 
         SetHP(1f);
 
-        _controller.enabled = false;
         transform.position = position;
-        _controller.enabled = true;
         _moveDirection = (characterPosition - transform.position).normalized;
+        _rigidBody.AddForce(_moveDirection * data.MoveSpeed);
         _animator.Run(_data.AnimatorController, _moveDirection);
-    }
-
-    private void FixedUpdate()
-    {
-        if (_data == null)
-            return;
-
-        _controller.Move(_moveDirection * _data.MoveSpeed);
     }
 
     private void SetHP(float value)
@@ -58,7 +51,25 @@ public class ZombieController : MonoBehaviour
 
     private void Death()
     {
+        SpawnLoot();
+
         gameObject.SetActive(false);
         _zombiePool.FreeZombie(this);
+    }
+
+    private void SpawnLoot()
+    {
+        LootItem loot = _lootFactory.Create().GetComponent<LootItem>();
+        loot.Initialize();
+        loot.transform.position = _lootSpawnPoint.position;
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        CharacterHurtBox character = collision.gameObject.GetComponent<CharacterHurtBox>();
+        if (character == null)
+            return;
+
+        character.Death();
     }
 }

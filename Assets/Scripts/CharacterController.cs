@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using Zenject;
@@ -44,7 +42,6 @@ public class CharacterController : MonoBehaviour, ICharacterPosition
         _shoot = _inputActions.PlayerActions.Shot;
         _shoot.Enable();
         _shoot.started += OnBurstStarted;
-        //_shoot.performed += OnShoot;
         _shoot.canceled += OnBurstCanceled;
     }
 
@@ -73,7 +70,6 @@ public class CharacterController : MonoBehaviour, ICharacterPosition
         _shotTimer.StartTimer();
     }
 
-    //private void OnShoot(InputAction.CallbackContext callback)
     private void Shoot()
     {
         if (!_shooting)
@@ -85,7 +81,6 @@ public class CharacterController : MonoBehaviour, ICharacterPosition
         _bulletsAmount--;
         _bulletsCounter.SetBulletsCount(_bulletsAmount);
 
-        Debug.Log("Shot");
         _firePoint.SpawnBullet();
         _animator.Shot();
     }
@@ -109,5 +104,17 @@ public class CharacterController : MonoBehaviour, ICharacterPosition
         }
 
         return _cameraPositionTransform.position;
+    }
+
+    public void AddBullets(int bulletsCount)
+    {
+        _bulletsAmount += bulletsCount;
+        _bulletsCounter.SetBulletsCount(_bulletsAmount);
+    }
+
+    public void Death()
+    {
+        Debug.Log("DEAD");
+        // Show GameOver screen
     }
 }
