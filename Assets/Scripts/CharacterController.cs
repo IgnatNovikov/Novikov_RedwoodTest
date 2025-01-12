@@ -2,7 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Zenject;
 
-public class CharacterController : MonoBehaviour, ICharacterPosition
+public class CharacterController : MonoBehaviour, ICharacter
 {
     [SerializeField] private UnityEngine.CharacterController _controller;
     [SerializeField] private CharacterAnimator _animator;
@@ -22,13 +22,17 @@ public class CharacterController : MonoBehaviour, ICharacterPosition
 
     private Vector2 _moveDirection;
 
+    private int _currentBullets;
+
     private bool _shooting = false;
 
     [Inject] private BulletsCounter _bulletsCounter;
+    [Inject] private GameOverScreen _gameOverScreen;
 
     private void Awake()
     {
         _inputActions = new InputActions();
+        _currentBullets = _bulletsAmount;
         _bulletsCounter.SetBulletsCount(_bulletsAmount);
 
         _shotTimer.OnTimeAction += Shoot;
@@ -73,16 +77,19 @@ public class CharacterController : MonoBehaviour, ICharacterPosition
     private void Shoot()
     {
         if (!_shooting)
+        {
+            _animator.Shot(false);
+            return;
+        }
+
+        if (_currentBullets < 1)
             return;
 
-        if (_bulletsAmount < 1)
-            return;
-
-        _bulletsAmount--;
-        _bulletsCounter.SetBulletsCount(_bulletsAmount);
+        _currentBullets--;
+        _bulletsCounter.SetBulletsCount(_currentBullets);
 
         _firePoint.SpawnBullet();
-        _animator.Shot();
+        _animator.Shot(true);
     }
 
     private void OnBurstCanceled(InputAction.CallbackContext callback)
@@ -108,13 +115,18 @@ public class CharacterController : MonoBehaviour, ICharacterPosition
 
     public void AddBullets(int bulletsCount)
     {
-        _bulletsAmount += bulletsCount;
-        _bulletsCounter.SetBulletsCount(_bulletsAmount);
+        _currentBullets += bulletsCount;
+        _bulletsCounter.SetBulletsCount(_currentBullets);
     }
 
     public void Death()
     {
-        Debug.Log("DEAD");
-        // Show GameOver screen
+        _gameOverScreen.Show();
+    }
+
+    public void Refresh()
+    {
+        _currentBullets = _bulletsAmount;
+        _bulletsCounter.SetBulletsCount(_currentBullets);
     }
 }

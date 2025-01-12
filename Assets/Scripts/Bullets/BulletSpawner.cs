@@ -8,7 +8,7 @@ public class BulletSpawner : MonoBehaviour, IBulletPool
     private List<BulletController> _usedBullets = new List<BulletController>();
 
     [Inject] private BulletFactory _bulletFactory;
-    [Inject] private ICharacterPosition _characterPosition;
+    [Inject] private ICharacter _characterPosition;
 
     public void SpawnBullet()
     {
@@ -43,5 +43,18 @@ public class BulletSpawner : MonoBehaviour, IBulletPool
 
         _usedBullets.Remove(bullet);
         _freeBullets.Push(bullet);
+    }
+
+    public void ClearPool()
+    {
+        int count = _usedBullets.Count - 1;
+        for (int i = count; i >= 0; i--)
+        {
+            BulletController bullet = _usedBullets[i];
+
+            bullet.gameObject.SetActive(false);
+            _freeBullets.Push(bullet);
+            _usedBullets.Remove(bullet);
+        }
     }
 }

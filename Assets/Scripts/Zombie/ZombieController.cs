@@ -18,7 +18,8 @@ public class ZombieController : MonoBehaviour
     private int _currentHealth;
 
     [Inject] private IZombiePool _zombiePool;
-    [Inject] private LootFactory _lootFactory;
+    [Inject] private ILootPool _lootPool;
+    [Inject] private SoundController _soundController;
 
     public void Init(ZombieData data, Vector3 position, Vector3 characterPosition)
     {
@@ -53,13 +54,15 @@ public class ZombieController : MonoBehaviour
     {
         SpawnLoot();
 
+        _soundController.Play();
+
         gameObject.SetActive(false);
         _zombiePool.FreeZombie(this);
     }
 
     private void SpawnLoot()
     {
-        LootItem loot = _lootFactory.Create().GetComponent<LootItem>();
+        LootItem loot = _lootPool.GetLoot();
         loot.Initialize();
         loot.transform.position = _lootSpawnPoint.position;
     }

@@ -1,5 +1,6 @@
 using UnityEngine;
 using TMPro;
+using Zenject;
 
 public class LootItem : MonoBehaviour
 {
@@ -8,6 +9,8 @@ public class LootItem : MonoBehaviour
     [SerializeField] private TextMeshPro _text;
 
     private int _count;
+
+    [Inject] private ILootPool _lootPool;
 
     public void Initialize()
     {
@@ -29,6 +32,6 @@ public class LootItem : MonoBehaviour
 
         character.AddBullets(_count);
 
-        Destroy(gameObject);
+        _lootPool.FreeLoot(this);
     }
 }

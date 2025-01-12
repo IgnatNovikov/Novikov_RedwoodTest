@@ -18,15 +18,20 @@ public class SceneInstaller : MonoInstaller
 
     [Header("Loot Settings")]
     [SerializeField] private GameObject _lootItem;
+    [SerializeField] private LootSpawner _lootSpawner;
 
     [Header("UI")]
     [SerializeField] private BulletsCounter _bulletsCounter;
+    [SerializeField] private GameOverScreen _gameOverScreen;
+
+    [Header("Sounds")]
+    [SerializeField] private SoundController _soundController;
 
     public override void InstallBindings()
     {
         Container.BindFactory<ZombieController, ZombieFactory>().FromComponentInNewPrefab(_zombiePrefab);
         Container.Bind<ISpawner>().To<ZombieSpawnerTransforms>().FromInstance(_zombieSpawnerTransforms).AsSingle();
-        Container.Bind<ICharacterPosition>().To<CharacterController>().FromInstance(_character).AsSingle();
+        Container.Bind<ICharacter>().To<CharacterController>().FromInstance(_character).AsSingle();
         Container.Bind<IZombiePool>().To<ZombieSpawner>().FromInstance(_zombieSpawner);
 
         Container.BindFactory<BulletController, BulletFactory>().FromComponentInNewPrefab(_bulletPrefab).UnderTransform(_bulletPoolTransform);
@@ -34,6 +39,11 @@ public class SceneInstaller : MonoInstaller
         Container.Bind<BulletsCounter>().FromInstance(_bulletsCounter);
         Container.Bind<IBulletPool>().To<BulletSpawner>().FromInstance(_bulletSpawner);
 
-        Container.BindFactory<LootItem, LootFactory>().FromComponentInNewPrefab(_lootItem);
+        Container.BindFactory<LootItem, LootFactory>().FromComponentInNewPrefab(_lootItem).UnderTransform(_lootSpawner.transform);
+        Container.Bind<ILootPool>().To<LootSpawner>().FromInstance(_lootSpawner);
+
+        Container.Bind<GameOverScreen>().FromInstance(_gameOverScreen);
+
+        Container.Bind<SoundController>().FromInstance(_soundController);
     }
 }

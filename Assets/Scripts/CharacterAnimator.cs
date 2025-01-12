@@ -31,8 +31,8 @@ public class CharacterAnimator : MonoBehaviour
         _animator.SetBool(_moveBoolName, true);
     }
 
-    public void Shot()
+    public void Shot(bool enable)
     {
-        _animator.SetTrigger(_shotTriggerName);
+        _animator.SetBool(_shotTriggerName, enable);
     }
 }

@@ -16,7 +16,7 @@ public class ZombieSpawner : MonoBehaviour, IZombiePool
 
     [Inject] private ZombieFactory _zombieFactory;
     [Inject] private ISpawner _spawnerTransforms;
-    [Inject] private ICharacterPosition _characterPosition;
+    [Inject] private ICharacter _characterPosition;
 
     private void Start()
     {
@@ -64,5 +64,18 @@ public class ZombieSpawner : MonoBehaviour, IZombiePool
     {
         _usedZombies.Remove(zombie);
         _freeZombies.Push(zombie);
+    }
+
+    public void ClearPool()
+    {
+        int count = _usedZombies.Count - 1;
+        for (int i = count; i >= 0; i--)
+        {
+            ZombieController zombie = _usedZombies[i];
+
+            zombie.gameObject.SetActive(false);
+            _freeZombies.Push(zombie);
+            _usedZombies.Remove(zombie);
+        }
     }
 }

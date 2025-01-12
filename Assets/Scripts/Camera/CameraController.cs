@@ -7,7 +7,7 @@ public class CameraController : MonoBehaviour
 {
     [SerializeField] private float _cameraSpeed = .2f;
 
-    [Inject] private ICharacterPosition _characterPosition;
+    [Inject] private ICharacter _characterPosition;
 
     private void FixedUpdate()
     {
