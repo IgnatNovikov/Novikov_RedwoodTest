@@ -4,7 +4,8 @@ using Zenject;
 
 public class GameOverScreen : MonoBehaviour
 {
-    [SerializeField] private Button _button;
+    [SerializeField] private Button _restartButton;
+    [SerializeField] private Button _quitButton;
 
     [Header("Animation Settings")]
     [SerializeField] private Animator _animator;
@@ -17,7 +18,8 @@ public class GameOverScreen : MonoBehaviour
 
     private void Awake()
     {
-        _button.onClick.AddListener(Restart);
+        _restartButton.onClick.AddListener(Restart);
+        _quitButton.onClick.AddListener(Quit);
     }
 
     public void Show()
@@ -39,5 +41,10 @@ public class GameOverScreen : MonoBehaviour
         _character.Refresh();
 
         Hide();
+    }
+
+    private void Quit()
+    {
+        Application.Quit();
     }
 }

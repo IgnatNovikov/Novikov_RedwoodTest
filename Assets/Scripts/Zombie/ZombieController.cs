@@ -54,7 +54,7 @@ public class ZombieController : MonoBehaviour
     {
         SpawnLoot();
 
-        _soundController.Play();
+        _soundController.PlayZombieDead();
 
         gameObject.SetActive(false);
         _zombiePool.FreeZombie(this);

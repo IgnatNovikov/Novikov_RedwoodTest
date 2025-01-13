@@ -29,6 +29,7 @@ public class Character : MonoBehaviour, ICharacter
 
     [Inject] private BulletsCounter _bulletsCounter;
     [Inject] private GameOverScreen _gameOverScreen;
+    [Inject] private SoundController _soundController;
 
     private void Awake()
     {
@@ -120,12 +121,14 @@ public class Character : MonoBehaviour, ICharacter
 
     public void AddBullets(int bulletsCount)
     {
+        _soundController.PlayPickUp();
         _currentBullets += bulletsCount;
         _bulletsCounter.SetBulletsCount(_currentBullets);
     }
 
     public void Death()
     {
+        _soundController.PlayZombieHit();
         _gameOverScreen.Show();
     }
 
