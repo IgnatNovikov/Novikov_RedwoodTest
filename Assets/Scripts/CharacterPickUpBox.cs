@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class CharacterPickUpBox : MonoBehaviour
 {
-    [SerializeField] private CharacterController _character;
+    [SerializeField] private Character _character;
 
     public void AddBullets(int count)
     {

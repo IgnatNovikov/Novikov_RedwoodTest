@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class CharacterHurtBox : MonoBehaviour
 {
-    [SerializeField] private CharacterController _character;
+    [SerializeField] private Character _character;
 
     public void Death()
     {

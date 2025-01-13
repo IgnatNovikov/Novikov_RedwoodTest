@@ -4,7 +4,7 @@ using Zenject;
 public class SceneInstaller : MonoInstaller
 {
     [Header("Character Settings")]
-    [SerializeField] private CharacterController _character;
+    [SerializeField] private Character _character;
 
     [Header("Zombie Settings")]
     [SerializeField] private GameObject _zombiePrefab;
@@ -31,7 +31,7 @@ public class SceneInstaller : MonoInstaller
     {
         Container.BindFactory<ZombieController, ZombieFactory>().FromComponentInNewPrefab(_zombiePrefab);
         Container.Bind<ISpawner>().To<ZombieSpawnerTransforms>().FromInstance(_zombieSpawnerTransforms).AsSingle();
-        Container.Bind<ICharacter>().To<CharacterController>().FromInstance(_character).AsSingle();
+        Container.Bind<ICharacter>().To<Character>().FromInstance(_character).AsSingle();
         Container.Bind<IZombiePool>().To<ZombieSpawner>().FromInstance(_zombieSpawner);
 
         Container.BindFactory<BulletController, BulletFactory>().FromComponentInNewPrefab(_bulletPrefab).UnderTransform(_bulletPoolTransform);

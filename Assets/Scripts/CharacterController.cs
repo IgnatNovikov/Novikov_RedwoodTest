@@ -2,9 +2,9 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using Zenject;
 
-public class CharacterController : MonoBehaviour, ICharacter
+public class Character : MonoBehaviour, ICharacter
 {
-    [SerializeField] private UnityEngine.CharacterController _controller;
+    [SerializeField] private CharacterController _controller;
     [SerializeField] private CharacterAnimator _animator;
     [SerializeField] private Transform _cameraPositionTransform;
     [SerializeField] private int _bulletsAmount;
@@ -15,6 +15,7 @@ public class CharacterController : MonoBehaviour, ICharacter
     [Header("Bullets")]
     [SerializeField] private BulletSpawner _firePoint;
     [SerializeField] private Timer _shotTimer;
+    [SerializeField] private AudioSource _audioSource;
 
     private InputActions _inputActions;
     private InputAction _move;
@@ -83,11 +84,15 @@ public class CharacterController : MonoBehaviour, ICharacter
         }
 
         if (_currentBullets < 1)
+        {
+            Death();
             return;
+        }
 
         _currentBullets--;
         _bulletsCounter.SetBulletsCount(_currentBullets);
 
+        _audioSource.Play();
         _firePoint.SpawnBullet();
         _animator.Shot(true);
     }
